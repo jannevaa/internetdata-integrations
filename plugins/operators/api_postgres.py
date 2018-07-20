@@ -17,6 +17,7 @@ class ApiToPostgresOperator(BaseOperator):
                  xcom_push=False,
                  http_conn_id='http_default',
                  pg_conn_id='postgres_rds',
+                 destination_table='staging.table',
                  *args, **kwargs):
 
         super(ApiToPostgresOperator, self).__init__(*args, **kwargs)
@@ -25,6 +26,7 @@ class ApiToPostgresOperator(BaseOperator):
         self.endpoint = endpoint
         self.xcom_push_flag = xcom_push
         self.pg_conn_id = pg_conn_id
+        self.destination_table = destination_table
 
     def execute(self, context):
 
@@ -47,4 +49,4 @@ class ApiToPostgresOperator(BaseOperator):
             str_vals = map(lambda x: str(x),vals)
             tuples.append(str_vals)
 
-        pg.insert_rows('staging.stock_symbols',tuples)
+        pg.insert_rows(self.destination_table,tuples)
