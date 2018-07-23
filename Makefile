@@ -1,10 +1,10 @@
 .PHONY: run build
 
 build:
-	docker build --rm -t puckel/docker-airflow .
+	docker build --rm -t puckel/docker-airflow:1.9.0-4 .
 
 run: build
-	docker-compose -f docker-compose-LocalExecutor.yml up -d
+	docker-compose -f docker-compose.yml up -d
 	@echo airflow running on http://localhost:8080
 
 kill:
@@ -14,5 +14,7 @@ kill:
 tty:
 	docker exec -i -t $(shell docker ps -q --filter ancestor=puckel/docker-airflow:1.9.0-4) /bin/bash
 
-update_dags:
-	docker cp dags/*.py $(shell docker ps -q --filter ancestor=puckel/docker-airflow:1.9.0-4):/usr/local/airflow/dags/
+root:
+	docker exec -u 0 -ti $(shell docker ps -q --filter ancestor=puckel/docker-airflow:1.9.0-4) /bin/bash
+
+restart: kill run

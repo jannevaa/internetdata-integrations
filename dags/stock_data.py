@@ -14,10 +14,14 @@ default_args = {
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 3,
+    'catchup': False,
     'retry_delay': timedelta(minutes=1)
 }
 
-dag = DAG('stock_data', default_args=default_args)
+dag = DAG(
+    'stock_data',
+    default_args=default_args,
+    schedule_interval= '*/5 * * * *')
 
 dummy_start = DummyOperator(
     task_id='start_load',
