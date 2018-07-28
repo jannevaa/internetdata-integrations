@@ -38,7 +38,7 @@ class ApiToPostgresOperator(BaseOperator):
 
         json_resp = json.loads(response.content)
 
-        self.log.info("Response received, saving results to temp file")
+        self.log.info("Response received, saving results to Postgres")
 
         pg = PostgresHook(postgres_conn_id=self.pg_conn_id)
 
@@ -48,5 +48,7 @@ class ApiToPostgresOperator(BaseOperator):
             vals = list(res.values())
             str_vals = map(lambda x: str(x),vals)
             tuples.append(str_vals)
+
+        self.log.info("Inserting " + str(len(tuples)) + " records to Postgres")
 
         pg.insert_rows(self.destination_table,tuples)
