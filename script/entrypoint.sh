@@ -67,6 +67,8 @@ if [ "$AIRFLOW__CORE__EXECUTOR" = "CeleryExecutor" ]; then
   wait_for_port "Redis" "$REDIS_HOST" "$REDIS_PORT"
 fi
 
+python create_user.py
+
 case "$1" in
   webserver)
     airflow initdb
